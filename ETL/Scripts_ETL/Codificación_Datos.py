@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Cargar el archivo CSV
-file_path = '03-Transformación_Datos.csv'
+file_path = './ETL/Dataset/03-Transformación_Datos.csv'
 df = pd.read_csv(file_path)
 
 # # Crear diccionarios para las variables de texto asegurando unicidad
@@ -11,10 +11,10 @@ categoria_dict = {idx + 1: categoria for idx, categoria in enumerate(sorted(df['
 causa_dict = {idx + 1: causa for idx, causa in enumerate(sorted(df['CAUSA'].unique()))}
 
 # Guardar los diccionarios en archivos CSV
-pd.DataFrame(list(canton_dict.items()), columns=['CODIGO', 'CANTON']).to_csv('canton_dict.csv', index=False)
-pd.DataFrame(list(evento_dict.items()), columns=['CODIGO', 'EVENTO']).to_csv('evento_dict.csv', index=False)
-pd.DataFrame(list(categoria_dict.items()), columns=['CODIGO', 'CATEGORIA DEL EVENTO']).to_csv('categoria_dict.csv', index=False)
-pd.DataFrame(list(causa_dict.items()), columns=['CODIGO', 'CAUSA']).to_csv('causa_dict.csv', index=False)
+pd.DataFrame(list(canton_dict.items()), columns=['CODIGO', 'CANTON']).to_csv('./ETL/DD/canton_dict.csv', index=False)
+pd.DataFrame(list(evento_dict.items()), columns=['CODIGO', 'EVENTO']).to_csv('./ETL/DD/evento_dict.csv', index=False)
+pd.DataFrame(list(categoria_dict.items()), columns=['CODIGO', 'CATEGORIA DEL EVENTO']).to_csv('./ETL/DD/categoria_dict.csv', index=False)
+pd.DataFrame(list(causa_dict.items()), columns=['CODIGO', 'CAUSA']).to_csv('./ETL/DD/causa_dict.csv', index=False)
 
 # Reemplazar las variables de texto con sus códigos correspondientes en el DataFrame
 df['CANTON'] = df['CANTON'].map({v: k for k, v in canton_dict.items()})
@@ -37,4 +37,4 @@ def convertir_rango_a_numero(rango):
 df['TOTAL DE PERSONAS AFECTADAS'] = df['TOTAL DE PERSONAS AFECTADAS'].apply(convertir_rango_a_numero)
 
 # Guardar el DataFrame codificado en un archivo CSV
-df.to_csv('04_Codificacion_Dataset.csv', index=False)
+df.to_csv('./ETL/Dataset/04_Codificacion_Dataset.csv', index=False)
