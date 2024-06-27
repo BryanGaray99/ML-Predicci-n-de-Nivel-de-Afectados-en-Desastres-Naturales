@@ -1,0 +1,276 @@
+/* predictor/static/predictor/styles.css */
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin-top: 20px;
+    font-size: x-large;
+    color: #333;
+    text-align: center;
+}
+
+h2 {
+    margin-top: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center; /* Center the container horizontally */
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 10px;
+    gap: 20px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    flex: 1; /* Ensure the container takes up remaining space */
+}
+
+#modelo {
+    font-size: medium;
+}
+
+.form-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 48%;
+    max-width: 600px;
+    box-sizing: border-box;
+    margin: 10px; /* Add margin to ensure spacing */
+}
+
+.result-container, .training-container {
+    background: #fff;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    box-sizing: border-box;
+    margin: 10px; /* Add margin to ensure spacing */
+}
+
+.form-container {
+    flex: 1; /* Make form-container take full height */
+}
+
+.result-container {
+    margin-bottom: 8px;
+}
+
+.result-container, .training-container {
+    flex: 1; /* Make result and training containers take half height each */
+}
+
+label, select, input, button {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+}
+
+label {
+    margin-top: 4px;
+    font-weight: bold;
+}
+
+input, select, button {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    max-width: 100%;
+    box-sizing: border-box;
+    max-width: 100%; 
+}
+
+select {
+    max-width: 320px; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+button {
+    background-color: #037171;
+    color: white;
+    font-size: large;
+    border: none;
+    cursor: pointer;
+    margin-top: 16px;
+}
+
+button:hover {
+    background-color: #037171;
+}
+
+.result-container h2, .training-container h2 {
+    margin-top: 4px;
+    width: 100%;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+}
+
+#predictionChart, #predictionChart {
+    margin-top: 8px;
+}
+
+#finalPrediction {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 4px;
+    text-align: center;
+    background-color: #FFFF00
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    width: 100%;
+    text-align: center;
+    margin-top: auto; /* Push footer to the bottom */
+    flex-shrink: 0; /* Prevent footer from shrinking */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 1px;
+}
+
+.footer-content a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.footer-icon {
+    width: 20px;
+    margin-right: 5px;
+}
+
+
+.spinner {
+    width: 32px;
+    height: 90px;
+    display: block;
+    margin: 20px auto;
+    position: relative;
+    border-radius: 50% 50% 0 0;
+    border-bottom: 10px solid #037171;
+    background-color: #FFF;
+    background-image: radial-gradient(ellipse at center, #FFF 34%, #037171 35%, #037171 54%, #FFF 55%), linear-gradient(#037171 10px, transparent 0);
+    background-size: 28px 28px;
+    background-position: center 20px , center 2px;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    animation: animloaderBack 1s linear infinite alternate;
+  }
+  .spinner::before {
+    content: '';  
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: 0px 15px #037171 inset;
+    top: 67px;
+  }
+  .spinner::after {
+    content: '';  
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 34px;
+    height: 34px;
+    top: 112%;
+    background: radial-gradient(ellipse at center, #ffdf00 8%, rgba(249, 62, 0, 0.6) 24%, rgba(0, 0, 0, 0) 100%);
+    border-radius: 50% 50% 0;
+    background-repeat: no-repeat;
+    background-position: -44px -44px;
+    background-size: 100px 100px;
+    box-shadow: 4px 4px 12px 0px rgba(255, 61, 0, 0.5);
+    box-sizing: border-box;
+    animation: animloader 1s linear infinite alternate;
+  }
+  
+  @keyframes animloaderBack {
+    0%, 30%, 70% {
+      transform: translateY(0px);
+    }
+    20%, 40%, 100% {
+      transform: translateY(-5px);
+    }
+  }
+  
+  @keyframes animloader {
+    0% {
+      box-shadow: 4px 4px 12px 2px rgba(255, 61, 0, 0.75);
+      width: 34px;
+      height: 34px;
+      background-position: -44px -44px;
+      background-size: 100px 100px;
+    }
+    100% {
+      box-shadow: 2px 2px 8px 0px rgba(255, 61, 0, 0.5);
+      width: 30px;
+      height: 28px;
+      background-position: -36px -36px;
+      background-size: 80px 80px;
+    }
+  }
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: medium; /* Reduce font size */
+    }
+
+    h2 {
+        font-size: small; /* Reduce font size */
+    }
+
+    label, input, select, button {
+        font-size: small; /* Reduce font size */
+    }
+
+    .container {
+        flex-direction: column;
+        align-items: center; /* Center align items vertically */
+        padding: 0;
+    }
+
+    .form-container, .result-container, .training-container {
+        width: 90%; /* Ensure containers take most of the screen width */
+        margin-bottom: 20px;
+    }
+
+    footer {
+        font-size: small; /* Reduce font size */
+    }
+}

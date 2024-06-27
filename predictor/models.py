@@ -97,7 +97,7 @@ def procesar_resultados(scoring_results):
     start_time = time.time()
     probabilidades = scoring_results[['confidence(1)', 'confidence(2)', 'confidence(3)']].iloc[0].tolist()
     rango_correcto = scoring_results['prediction(TOTAL DE PERSONAS AFECTADAS)'].iloc[0]
-    resultado_final = probabilidades + [rango_correcto]
+    resultado_final = [probabilidades + [rango_correcto]]
     end_time = time.time()
     print(f"Resultados procesados en {end_time - start_time:.2f} segundos.")
     return resultado_final

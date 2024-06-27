@@ -4,86 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Decision Tree Simulator</title>
+    {% load static %}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'predictor/styles.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
 </head>
 <body>
-    <h1>Decision Tree Simulator</h1>
-    <form id="predict-form">
-        <label for="modelo">Modelo:</label>
-        <select id="modelo" name="modelo">
-            <option value="python">Python</option>
-            <option value="rapidminer">RapidMiner</option>
-        </select><br>
-        <label for="infraestructura">Total de Infraestructura Afectada:</label>
-        <input type="number" id="infraestructura" name="infraestructura" min="0" max="1000000"><br>
-        <label for="canton">Cantón:</label>
-        <select id="canton" name="canton" class="select2">
-            {% for nombre, codigo in cantones.items %}
-                <option value="{{ nombre }}">{{ nombre }}</option>
-            {% endfor %}
-        </select><br>
-        <label for="evento">Evento:</label>
-        <select id="evento" name="evento" class="select2">
-            {% for nombre, codigo in eventos.items %}
-                <option value="{{ nombre }}">{{ nombre }}</option>
-            {% endfor %}
-        </select><br>
-        <label for="causa">Causa:</label>
-        <select id="causa" name="causa" class="select2">
-            {% for nombre, codigo in causas.items %}
-                <option value="{{ nombre }}">{{ nombre }}</option>
-            {% endfor %}
-        </select><br>
-        <label for="categoria">Categoría del Evento:</label>
-        <select id="categoria" name="categoria" class="select2">
-            {% for nombre, codigo in categorias.items %}
-                <option value="{{ nombre }}">{{ nombre }}</option>
-            {% endfor %}
-        </select><br>
-        <label for="mes">Mes:</label>
-        <input type="number" id="mes" name="mes" min="1" max="12"><br>
-        {% csrf_token %}
-        <button type="button" onclick="makePrediction()">Predecir</button>
-    </form>
-    <div id="result">
-        <h2>Resultado de la Predicción</h2>
-        <p id="prediction"></p>
+    <h1>Árbol de Decisiones - Predicción de Nivel de Afectados en Desastres Naturales - Ecuador</h1>
+    <div class="container">
+        <div class="form-container">
+            <form id="predict-form">
+                {% csrf_token %}
+                <label for="modelo">Modelo:</label>
+                <select id="modelo" name="modelo">
+                    <option value="python">Python</option>
+                    <option value="rapidminer">RapidMiner</option>
+                </select>
+                <label for="canton">Cantón:</label>
+                <select id="canton" name="canton" class="select2">
+                    {% for nombre, codigo in cantones.items %}
+                        <option value="{{ nombre }}">{{ nombre }}</option>
+                    {% endfor %}
+                </select><br>
+                <label for="evento">Evento:</label>
+                <select id="evento" name="evento" class="select2">
+                    {% for nombre, codigo in eventos.items %}
+                        <option value="{{ nombre }}">{{ nombre }}</option>
+                    {% endfor %}
+                </select><br>
+                <label for="causa">Causa:</label>
+                <select id="causa" name="causa" class="select2">
+                    {% for nombre, codigo in causas.items %}
+                        <option value="{{ nombre }}">{{ nombre }}</option>
+                    {% endfor %}
+                </select><br>
+                <label for="categoria">Categoría del Evento:</label>
+                <select id="categoria" name="categoria" class="select2">
+                    {% for nombre, codigo in categorias.items %}
+                        <option value="{{ nombre }}">{{ nombre }}</option>
+                    {% endfor %}
+                </select><br>
+                <label for="mes">Mes:</label>
+                <input type="number" id="mes" name="mes" min="1" max="12">
+                <label for="infraestructura">Total de Infraestructura Afectada:</label>
+                <input type="number" id="infraestructura" name="infraestructura" min="0" max="1000000">
+                <button type="button" onclick="makePrediction()">Predecir</button>
+            </form>
+        </div>
+        <div class="result-training-container">
+            <div class="result-container">
+                <h2>Resultado de la Predicción</h2>
+                <div id="loader" style="display:none;">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="predictionChart"></canvas>
+                <p id="finalPrediction"></p>
+            </div>
+            <div class="training-container">
+                <h2>Re-Entrenamiento: Modelo de Python</h2>
+            </div>
+        </div>
     </div>
-
-    <script>
-        function makePrediction() {
-            const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-            const data = {
-                'modelo': document.getElementById('modelo').value,
-                'datos': {
-                    'TOTAL DE INFRAESTRUCTURA AFECTADA': document.getElementById('infraestructura').value,
-                    'CANTON': document.getElementById('canton').value,
-                    'EVENTO': document.getElementById('evento').value,
-                    'CAUSA': document.getElementById('causa').value,
-                    'CATEGORIA DEL EVENTO': document.getElementById('categoria').value,
-                    'MES': document.getElementById('mes').value
-                }
-            };
-
-            fetch('/predict/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('prediction').innerText = JSON.stringify(data.resultados);
-            });
-        }
-
-        $(document).ready(function() {
-            $('.select2').select2();
-        });
-    </script>
+    <footer>
+        <div class="footer-content">
+            <span>Proyecto Final - Programación de Análisis de Datos - Docente: PhD. Tal Tal - UNIVER </span></br>
+            <span>Autor: Tu Nombre</span>
+            <a href="https://www.linkedin.com/in/91384327" target="_blank">
+                <img src="{% static 'predictor/LI_In_Logo.png' %}" alt="LinkedIn" class="footer-icon"> tu-nickname
+            </a>
+            <a href="mailto:emailtofixwr2r323r@gmail.com">
+                <img src="{% static 'predictor/Gmail_Logo.png' %}" alt="Gmail" class="footer-icon"> EmailMe
+            </a>
+        </div>
+    </footer>
+    <script src="{% static 'predictor/script.js' %}"></script>
 </body>
 </html>
