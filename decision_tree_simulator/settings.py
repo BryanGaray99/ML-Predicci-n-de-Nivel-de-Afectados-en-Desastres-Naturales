@@ -31,7 +31,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Directorios adicionales donde Django debería buscar archivos estáticos
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'predictor', 'static', 'predictor'),
 ]
 
 # Quick-start development settings - unsuitable for production
@@ -74,7 +74,7 @@ ROOT_URLCONF = 'decision_tree_simulator.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'predictor', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
