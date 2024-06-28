@@ -98,6 +98,9 @@
                     <input type="file" name="file" id="csv-file" accept=".csv" class="file-input">
                     <button type="button" onclick="uploadCSV()" class="btn-upload">Cargar CSV y Procesar</button>
                 </form>
+                <div id="loader-csv" style="display:none;">
+                    <div class="spinner"></div>
+                </div>       
                 <a id="download-link" class="download-link" style="display: none;">Download Processed CSV</a>
                 <p id="upload-message"></p>
             </div>

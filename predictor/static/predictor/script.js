@@ -1,15 +1,24 @@
 // predictor/static/predictor/script.js
 
 let predictionChart = null;  // Definir la variable predictionChart a nivel global
+let downloadLink = null;  // Definir la variable downloadLink a nivel global
 
-function showLoader() {
+function showLoaderChart() {
     document.getElementById('loader').style.display = 'block';
     document.getElementById('predictionChart').style.display = 'none'; // Ocultar el gráfico cuando se muestra el loader
 }
 
-function hideLoader() {
+function hideLoaderChart() {
     document.getElementById('loader').style.display = 'none';
     document.getElementById('predictionChart').style.display = 'block'; // Mostrar el gráfico cuando se oculta el loader
+}
+
+function showLoaderCSV() {
+    document.getElementById('loader-csv').style.display = 'block';
+}
+
+function hideLoaderCSV() {
+    document.getElementById('loader-csv').style.display = 'none';
 }
 
 function makePrediction() {
@@ -34,7 +43,7 @@ function makePrediction() {
         }
     };
 
-    showLoader();  // Mostrar el loader antes de enviar la solicitud
+    showLoaderChart();  // Mostrar el loader antes de enviar la solicitud
 
     fetch('/predict/', {
         method: 'POST',
@@ -125,7 +134,7 @@ function makePrediction() {
         document.getElementById('finalPrediction').style.color = 'red';
     })
     .finally(() => {
-        hideLoader();  // Ocultar el loader después de recibir la respuesta
+        hideLoaderChart();  // Ocultar el loader después de recibir la respuesta
     });
 }
 
@@ -140,6 +149,8 @@ function uploadCSV() {
     const form = document.getElementById('upload-csv-form');
     const formData = new FormData(form);
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+    showLoaderCSV();
 
     fetch('/upload_csv/', {
         method: 'POST',
@@ -167,6 +178,9 @@ function uploadCSV() {
         console.error('Error:', error);
         messageElement.innerText = 'Error al procesar el archivo.';
         messageElement.classList.add('error');
+    })
+    .finally(() => {
+        hideLoaderCSV();  // Ocultar el loader después de recibir la respuesta
     });
 }
 
