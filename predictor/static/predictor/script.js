@@ -123,6 +123,40 @@ function makePrediction() {
     });
 }
 
+function uploadCSV() {
+    const form = document.getElementById('upload-csv-form');
+    const formData = new FormData(form);
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+    fetch('/upload_csv/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken
+        },
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la carga del archivo');
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        const downloadLink = document.getElementById('download-link');
+        const url = window.URL.createObjectURL(blob);
+        downloadLink.href = url;
+        downloadLink.download = 'processed_data.csv';
+        downloadLink.style.display = 'block';
+        downloadLink.click();
+        window.URL.revokeObjectURL(url);
+        document.getElementById('upload-message').innerText = 'Archivo procesado y listo para descargar.';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('upload-message').innerText = 'Error al procesar el archivo.';
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     $('.select2').select2();
 });

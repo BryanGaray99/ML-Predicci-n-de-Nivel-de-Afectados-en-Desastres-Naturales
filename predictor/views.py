@@ -1,12 +1,13 @@
 # predictor/views.py
-
+import os
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 import json
 import pandas as pd
 from .models import (
     cargar_modelo_python, 
-    predecir_probabilidades_python, 
+    predecir_probabilidades_python,
+    procesar_y_reentrenar, 
     conectar_a_rapidminer, 
     preparar_datos_rapidminer, 
     guardar_csv_rapidminer, 
@@ -66,3 +67,21 @@ def predict(request):
             resultados = []
 
         return JsonResponse({"resultados": resultados})
+    
+def upload_csv(request):
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
+        csv_file_path = f"./ETL/Dataset/{csv_file.name}"
+        
+        with open(csv_file_path, 'wb+') as destination:
+            for chunk in csv_file.chunks():
+                destination.write(chunk)
+        
+        try:
+            processed_csv_path = procesar_y_reentrenar(csv_file_path)
+            with open(processed_csv_path, 'rb') as processed_file:
+                response = HttpResponse(processed_file.read(), content_type='text/csv')
+                response['Content-Disposition'] = f'attachment; filename={os.path.basename(processed_csv_path)}'
+                return response
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)

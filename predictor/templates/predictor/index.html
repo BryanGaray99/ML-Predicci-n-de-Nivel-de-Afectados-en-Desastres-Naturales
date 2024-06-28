@@ -65,17 +65,25 @@
             </div>
             <div class="training-container">
                 <h2>Re-Entrenamiento: Modelo de Python</h2>
+                <p>Puedes subir tu dataset <a href="https://www.datosabiertos.gob.ec/dataset/eventos-peligrosos" target="_blank"> Eventos Peligrosos</a> actualizado  </br> en formato CSV para reentrenar el modelo de Python</p>
+                <form id="upload-csv-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="file" id="csv-file" accept=".csv" class="file-input">
+                    <button type="button" onclick="uploadCSV()" class="btn-upload">Cargar CSV y Procesar</button>
+                </form>
+                <a id="download-link" class="download-link" style="display: none;">Download Processed CSV</a>
+                <p id="upload-message"></p>
             </div>
         </div>
     </div>
     <footer>
         <div class="footer-content">
-            <span>Proyecto Final - Programación de Análisis de Datos - Docente: PhD. Tal Tal - UNIVER </span></br>
-            <span>Autor: Tu Nombre</span>
-            <a href="https://www.linkedin.com/in/91384327" target="_blank">
-                <img src="{% static 'predictor/LI_In_Logo.png' %}" alt="LinkedIn" class="footer-icon"> tu-nickname
+            <span>Proyecto Final - Programación de Análisis de Datos - Docente: PhD. Julian Galindo - UISEK </span></br>
+            <span>Autor: Bryan Garay B.</span>
+            <a href="https://www.linkedin.com/in/bg99astro" target="_blank">
+                <img src="{% static 'predictor/LI_In_Logo.png' %}" alt="LinkedIn" class="footer-icon"> bg99astro
             </a>
-            <a href="mailto:emailtofixwr2r323r@gmail.com">
+            <a href="mailto:bryangarayacademico@gmail.com">
                 <img src="{% static 'predictor/Gmail_Logo.png' %}" alt="Gmail" class="footer-icon"> EmailMe
             </a>
         </div>

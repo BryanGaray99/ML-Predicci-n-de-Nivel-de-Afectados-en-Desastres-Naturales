@@ -4,12 +4,14 @@ import os
 import time
 import numpy as np
 import pandas as pd
-from sklearn import metrics
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
 import pickle
 import rapidminer
 import time
+from sklearn import metrics
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from ETL.ETL_Process import procesar_csv_completo
+
 
 # Funciones del modelo de Python
 def cargar_datos_python(file_path):
@@ -57,6 +59,22 @@ if not os.path.exists(modelo_path):
     guardar_modelo_python(modelo, columnas, modelo_path)
 else:
     modelo, columnas = cargar_modelo_python(modelo_path)
+
+# Nueva función para procesar CSV completo y reentrenar el modelo
+def procesar_y_reentrenar(csv_file_path):
+    # Generar nombre de archivo con estampa de tiempo
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    output_csv_path = f"./ETL/Dataset/04_Codificacion_Dataset_{timestamp}.csv"
+    
+    # Procesar el CSV
+    procesar_csv_completo(csv_file_path, output_csv_path)
+    
+    # Reentrenar el modelo de Python con el nuevo archivo procesado
+    X, y = cargar_datos_python(output_csv_path)
+    modelo, columnas = entrenar_modelo_python(X, y)
+    guardar_modelo_python(modelo, columnas, modelo_path)
+    
+    return output_csv_path
 
 # Funciones del modelo de RapidMiner
 def conectar_a_rapidminer(rm_home):
