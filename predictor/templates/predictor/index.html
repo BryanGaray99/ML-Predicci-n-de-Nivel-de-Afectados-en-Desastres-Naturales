@@ -13,15 +13,15 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
 </head>
 <body>
-    <h1>Árbol de Decisiones - Predicción de Nivel de Afectados en Desastres Naturales - Ecuador</h1>
+    <h1>Predicción de Nivel de Afectados en Desastres Naturales en Ecuador</h1>
     <div class="container">
         <div class="form-container">
             <form id="predict-form">
                 {% csrf_token %}
                 <label for="modelo">Modelo:</label>
                 <select id="modelo" name="modelo">
-                    <option value="python">Python</option>
-                    <option value="rapidminer">RapidMiner</option>
+                    <option value="python">Decision Tree - Python</option>
+                    <option value="rapidminer">Decision Tree - RapidMiner</option>
                 </select>
                 <label for="canton">Cantón:</label>
                 <select id="canton" name="canton" class="select2">

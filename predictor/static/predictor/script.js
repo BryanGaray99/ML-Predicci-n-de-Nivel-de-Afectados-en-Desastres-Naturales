@@ -123,7 +123,16 @@ function makePrediction() {
     });
 }
 
+// predictor/static/predictor/script.js
+
 function uploadCSV() {
+    // Limpiar el mensaje anterior y ocultar el enlace de descarga
+    const messageElement = document.getElementById('upload-message');
+    const downloadLink = document.getElementById('download-link');
+    messageElement.innerText = '';
+    messageElement.classList.remove('error');
+    downloadLink.style.display = 'none';
+
     const form = document.getElementById('upload-csv-form');
     const formData = new FormData(form);
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
@@ -142,18 +151,18 @@ function uploadCSV() {
         return response.blob();
     })
     .then(blob => {
-        const downloadLink = document.getElementById('download-link');
         const url = window.URL.createObjectURL(blob);
         downloadLink.href = url;
         downloadLink.download = 'processed_data.csv';
         downloadLink.style.display = 'block';
         downloadLink.click();
         window.URL.revokeObjectURL(url);
-        document.getElementById('upload-message').innerText = 'Archivo procesado y listo para descargar.';
+        messageElement.innerText = 'Archivo procesado y listo para descargar.';
     })
     .catch(error => {
         console.error('Error:', error);
-        document.getElementById('upload-message').innerText = 'Error al procesar el archivo.';
+        messageElement.innerText = 'Error al procesar el archivo.';
+        messageElement.classList.add('error');
     });
 }
 
