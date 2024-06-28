@@ -3,7 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Decision Tree Simulator</title>
+    <title>Decision Tree Simulator | Simulador de Árbol de Decisión</title>
+    {% load static %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'predictor/styles.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
+    <meta name="description" content="Simulador de Árbol de Decisión para predecir el nivel de afectados en desastres naturales en Ecuador.">
+    <meta name="keywords" content="Machine Learning, Árbol de Decisión, Desastres Naturales, Ecuador, Predicción">
+    <meta name="author" content="Bryan Garay">
+
+    <link rel="canonical" href="">
+    <meta property="og:title" content="Decision Tree Simulator | Simulador de Árbol de Decisión">
+    <meta property="og:description" content="Simulador de Árbol de Decisión para predecir el nivel de afectados en desastres naturales en Ecuador.">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Decision Tree Simulator | Simulador de Árbol de Decisión">
+    <meta name="twitter:description" content="Simulador de Árbol de Decisión para predecir el nivel de afectados en desastres naturales en Ecuador.">
+    <meta name="twitter:image" content="">
+    
     {% load static %}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'predictor/styles.css' %}">
@@ -12,6 +34,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
 </head>
+
 <body>
     <h1>Predicción de Nivel de Afectados en Desastres Naturales en Ecuador</h1>
     <div class="container">
@@ -19,9 +42,9 @@
             <form id="predict-form">
                 {% csrf_token %}
                 <label for="modelo">Modelo:</label>
-                <select id="modelo" name="modelo">
-                    <option value="python">Decision Tree - Python</option>
-                    <option value="rapidminer">Decision Tree - RapidMiner</option>
+                <select id="modelo" name="modelo" {% if mode == 'production' %}disabled{% endif %}>
+                    <option value="python">Python Decision Tree</option>
+                    <option value="rapidminer">RapidMiner Decision Tree</option>
                 </select>
                 <label for="canton">Cantón:</label>
                 <select id="canton" name="canton" class="select2">
@@ -48,9 +71,13 @@
                     {% endfor %}
                 </select><br>
                 <label for="mes">Mes:</label>
-                <input type="number" id="mes" name="mes" min="1" max="12">
+                <select id="mes" name="mes" required>
+                    {% for mes in meses %}
+                        <option value="{{ mes }}">{{ mes }}</option>
+                    {% endfor %}
+                </select>
                 <label for="infraestructura">Total de Infraestructura Afectada:</label>
-                <input type="number" id="infraestructura" name="infraestructura" min="0" max="1000000">
+                <input type="number" id="infraestructura" name="infraestructura" min="0" max="10000000" required>
                 <button type="button" onclick="makePrediction()">Predecir</button>
             </form>
         </div>
@@ -79,12 +106,12 @@
     <footer>
         <div class="footer-content">
             <span>Proyecto Final - Programación de Análisis de Datos - Docente: PhD. Julian Galindo - UISEK </span></br>
-            <span>Autor: Bryan Garay B.</span>
+            <span>Autor: Bryan Garay</span>
             <a href="https://www.linkedin.com/in/bg99astro" target="_blank">
-                <img src="{% static 'predictor/LI_In_Logo.png' %}" alt="LinkedIn" class="footer-icon"> bg99astro
+                <img src="{% static 'predictor/LI_In_Logo.png' %}" alt="LinkedIn" class="footer-icon"> LinkedIn
             </a>
             <a href="mailto:bryangarayacademico@gmail.com">
-                <img src="{% static 'predictor/Gmail_Logo.png' %}" alt="Gmail" class="footer-icon"> EmailMe
+                <img src="{% static 'predictor/Gmail_Logo.png' %}" alt="Gmail" class="footer-icon"> Gmail
             </a>
         </div>
     </footer>

@@ -229,10 +229,11 @@ button:hover {
 }
 
 footer {
-    background-color: #333;
-    color: white;
+    background-color: #003e3e;
+    color: rgb(229, 229, 229);
     padding: 10px 0;
     width: 100%;
+    font-size: 16px;
     text-align: center;
     margin-top: auto; /* Push footer to the bottom */
     flex-shrink: 0; /* Prevent footer from shrinking */

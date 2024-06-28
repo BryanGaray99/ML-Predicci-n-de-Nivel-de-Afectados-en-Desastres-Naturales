@@ -15,6 +15,8 @@ from .models import (
     procesar_resultados_rapidminer
 )
 from .utils import cargar_diccionarios
+from django.conf import settings
+from django_ratelimit.decorators import ratelimit
 
 # Cargar el modelo de Python una vez al iniciar
 modelo_path = './ScoringModel/arbol_modelo.pkl'
@@ -28,24 +30,37 @@ def index(request):
         'cantones': cantones,
         'categorias': categorias,
         'causas': causas,
-        'eventos': eventos
+        'eventos': eventos,
+        'meses': range(1, 13), 
+        'mode': settings.MODE
     }
     return render(request, 'predictor/index.html', context)
 
+@ratelimit(key='ip', rate='50/d', method=ratelimit.ALL, block=True)
 def predict(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         modelo_seleccionado = data.get('modelo')
         datos_usuario = data['datos']
         
-        # Convertir valores a códigos
+        # Validaciones y conversiones
+        try:
+            total_infra = int(datos_usuario['TOTAL DE INFRAESTRUCTURA AFECTADA'])
+            if total_infra < 0 or total_infra > 10000000:
+                raise ValueError("El total de infraestructura debe estar entre 0 y 10,000,000.")
+        except ValueError as e:
+            return JsonResponse({"error": str(e)}, status=400)
+        
         datos_usuario['CANTON'] = cantones[datos_usuario['CANTON']]
         datos_usuario['CATEGORIA DEL EVENTO'] = categorias[datos_usuario['CATEGORIA DEL EVENTO']]
         datos_usuario['CAUSA'] = causas[datos_usuario['CAUSA']]
         datos_usuario['EVENTO'] = eventos[datos_usuario['EVENTO']]
 
         nuevos_datos = pd.DataFrame(datos_usuario, index=[0])
-        
+
+        if settings.MODE == 'production' and modelo_seleccionado == 'rapidminer':
+            return JsonResponse({"error": "RapidMiner predictions are disabled in production mode."}, status=403)
+
         if modelo_seleccionado == 'python':
             resultados = predecir_probabilidades_python(modelo_python, nuevos_datos, columnas_python)
         elif modelo_seleccionado == 'rapidminer':
@@ -67,7 +82,8 @@ def predict(request):
             resultados = []
 
         return JsonResponse({"resultados": resultados})
-    
+
+@ratelimit(key='ip', rate='20/d', method=ratelimit.ALL, block=True)
 def upload_csv(request):
     if request.method == 'POST':
         csv_file = request.FILES['file']

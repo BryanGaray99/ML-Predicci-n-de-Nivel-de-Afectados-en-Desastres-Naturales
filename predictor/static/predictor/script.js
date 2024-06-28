@@ -19,6 +19,7 @@ function makePrediction() {
 
     // Limpiar el contenido del resultado final
     document.getElementById('finalPrediction').innerText = '';
+    document.getElementById('finalPrediction').style.color = 'black'; // Restablecer el color del texto a negro
 
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
     const data = {
@@ -45,6 +46,10 @@ function makePrediction() {
     })
     .then(response => response.json())
     .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
         const resultados = data.resultados[0];
         const probabilidades = resultados.slice(0, 3).map(p => (p * 100).toFixed(2)); // Convertir a porcentaje y limitar a dos decimales
         const prediccionFinal = resultados[3];
@@ -116,14 +121,13 @@ function makePrediction() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error al obtener la predicción.');
+        document.getElementById('finalPrediction').innerText = error.message;
+        document.getElementById('finalPrediction').style.color = 'red';
     })
     .finally(() => {
         hideLoader();  // Ocultar el loader después de recibir la respuesta
     });
 }
-
-// predictor/static/predictor/script.js
 
 function uploadCSV() {
     // Limpiar el mensaje anterior y ocultar el enlace de descarga
