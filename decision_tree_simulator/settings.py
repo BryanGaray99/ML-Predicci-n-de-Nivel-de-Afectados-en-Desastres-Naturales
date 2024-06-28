@@ -23,10 +23,15 @@ MODE = os.getenv('MODE')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Configuración de archivos estáticos
-STATIC_URL = '/predictor/static/predictor/'
+# URL a la cual se accederán los archivos estáticos
+STATIC_URL = '/static/'
+
+# Ruta en el sistema de archivos donde se almacenarán los archivos estáticos recolectados
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Directorios adicionales donde Django debería buscar archivos estáticos
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "predictor"),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 # Quick-start development settings - unsuitable for production
