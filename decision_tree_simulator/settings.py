@@ -138,6 +138,13 @@ USE_TZ = True
 # Here, they well be accessible at your-domain.onrender.com/static/... or yourcustomdomain.com/static/...
 STATIC_URL = '/static/'
 
+# Ruta en el sistema de archivos donde se almacenarán los archivos estáticos recolectados
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Directorios adicionales donde Django debería buscar archivos estáticos
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'predictor', 'static', 'predictor'),
+]
 # The Following code for production may break development mode, so we need to check if we're in DEBUG mode
 if not DEBUG:
     # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
