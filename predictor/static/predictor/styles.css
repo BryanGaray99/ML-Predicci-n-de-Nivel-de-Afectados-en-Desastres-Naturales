@@ -183,7 +183,6 @@ button:hover {
     width: 100%;
     max-width: 320px;
     margin: 0 auto 20px;
-    padding: 10px;
     background-color: #037171;
     color: #fff;
     border: none;
@@ -334,6 +333,43 @@ footer {
 
 /* Media Queries for Responsive Design */
 @media (max-width: 768px) {
+    h1 {
+        font-size: medium; /* Reduce font size */
+    }
+
+    h2 {
+        font-size: small; /* Reduce font size */
+    }
+
+    label, input, select, button {
+        font-size: small; /* Reduce font size */
+    }
+
+    .container {
+        flex-direction: column;
+        align-items: center; /* Center align items vertically */
+        padding: 0;
+    }
+
+    .form-container, .result-container, .training-container {
+        width: 90%; /* Ensure containers take most of the screen width */
+        margin-bottom: 20px;
+    }
+
+    footer {
+        font-size: small; /* Reduce font size */
+    }
+}
+
+
+/* Media Queries for Responsive Design */
+@media (max-width: 480px) {
+    .result-training-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;;
+    }
+
     h1 {
         font-size: medium; /* Reduce font size */
     }
