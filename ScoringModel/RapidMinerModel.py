@@ -72,8 +72,8 @@ data = {
     'TOTAL DE INFRAESTRUCTURA AFECTADA': [15],
     'CANTON': [5],
     'EVENTO': [4],
-    'CAUSA': [5],
     'CATEGORIA DEL EVENTO': [18],
+    'CAUSA': [5],
     'MES': [3],
     'TOTAL DE PERSONAS AFECTADAS': [1]
 }
