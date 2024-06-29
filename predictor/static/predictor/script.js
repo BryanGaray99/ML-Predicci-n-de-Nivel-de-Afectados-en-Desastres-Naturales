@@ -62,7 +62,7 @@ function makePrediction() {
         const resultados = data.resultados[0];
         const probabilidades = resultados.slice(0, 3).map(p => (p * 100).toFixed(2)); // Convertir a porcentaje y limitar a dos decimales
         const prediccionFinal = resultados[3];
-        const labels = ['Rango 1', 'Rango 2', 'Rango 3'];
+        const labels = ['Rango 1 (0 a 4)', 'Rango 2 (5 a 50)', 'Rango 3 (>50)'];
         const ctx = document.getElementById('predictionChart').getContext('2d');
 
         // Destruir el gráfico anterior si existe
@@ -126,7 +126,16 @@ function makePrediction() {
 
         // Muestra el resultado final de la predicción
         const rangoFinal = ['Rango 1', 'Rango 2', 'Rango 3'][prediccionFinal - 1];
-        document.getElementById('finalPrediction').innerText = `Rango más probable: ${rangoFinal}`;
+        if (rangoFinal === 'Rango 1') {
+            document.getElementById('finalPrediction').innerText = `Más probable: Rango 1 (0 a 4 Personas)`;
+        }
+        else if (rangoFinal === 'Rango 2') {
+            document.getElementById('finalPrediction').innerText = `Más probable: Rango 2 (5 a 50 Personas)`;
+        }
+        else if (rangoFinal === 'Rango 3') {
+            document.getElementById('finalPrediction').innerText = `Más probable: Rango 3 (>50 Personas)`;
+        }
+
     })
     .catch(error => {
         console.error('Error:', error);
@@ -134,7 +143,7 @@ function makePrediction() {
         document.getElementById('finalPrediction').style.color = 'red';
     })
     .finally(() => {
-        hideLoaderChart();  // Ocultar el loader después de recibir la respuesta
+        hideLoaderChart();  
     });
 }
 
