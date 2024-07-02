@@ -18,13 +18,16 @@ def filtrar_columnas(csv_file_path):
 
     print(f"Original dataset size: {df.shape}")
 
-    # Renombrar columna con salto de línea
-    df.rename(columns={"PERSONAS EN\n  OTROS MEDIOS": "PERSONAS EN OTROS MEDIOS"}, inplace=True)
+    # Renombrar columna con salto de línea si existe
+    if "PERSONAS EN\n  OTROS MEDIOS" in df.columns:
+        df.rename(columns={"PERSONAS EN\n  OTROS MEDIOS": "PERSONAS EN OTROS MEDIOS"}, inplace=True)
+
+    # Identificar columnas presentes en el dataset que deben mantenerse
+    columnas_presentes = [col for col in columnas_a_mantener if col in df.columns]
 
     # Filtrar las columnas
-    df_filtrado = df[columnas_a_mantener]
-    # print(f"Dataset size after column filtering: {df_filtrado.shape}")
-
+    df_filtrado = df[columnas_presentes]
+    print(f"Dataset size after column filtering: {df_filtrado.shape}")
 
     return df_filtrado
 
@@ -73,6 +76,8 @@ def procesar_y_filtrar_dataset(df):
 
     return df_ordenado
 
+import pandas as pd
+
 def agregar_totales(df):
     # Columnas que suman para TOTAL DE PERSONAS AFECTADAS
     columnas_personas_afectadas = [
@@ -90,24 +95,32 @@ def agregar_totales(df):
         "BIENES PRIVADOS AFECTADOS", "BIENES PRIVADOS DESTRUIDOS"
     ]
 
-    # Filtrar las columnas para asegurarse de que sean numéricas
-    for col in columnas_personas_afectadas + columnas_infraestructura_afectada:
-        df[col] = pd.to_numeric(df[col], errors='coerce')
+    # Filtrar solo las columnas que existen en el dataframe
+    columnas_personas_afectadas_presentes = [col for col in columnas_personas_afectadas if col in df.columns]
+    columnas_infraestructura_afectada_presentes = [col for col in columnas_infraestructura_afectada if col in df.columns]
 
-    # Eliminar las filas que tengan NaN en las columnas a sumar
-    df = df.dropna(subset=columnas_personas_afectadas + columnas_infraestructura_afectada)
+    # Asegurarse de que todas las columnas sean numéricas
+    for col in columnas_personas_afectadas_presentes + columnas_infraestructura_afectada_presentes:
+        df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0).astype(int)
 
     # Sumar las columnas especificadas para cada fila
-    df["TOTAL DE PERSONAS AFECTADAS"] = df[columnas_personas_afectadas].sum(axis=1).astype(int)
-    df["TOTAL DE INFRAESTRUCTURA AFECTADA"] = df[columnas_infraestructura_afectada].sum(axis=1).astype(int)
+    if columnas_personas_afectadas_presentes:
+        df["TOTAL DE PERSONAS AFECTADAS"] = df[columnas_personas_afectadas_presentes].sum(axis=1).astype(int)
+    else:
+        df["TOTAL DE PERSONAS AFECTADAS"] = 0
+
+    if columnas_infraestructura_afectada_presentes:
+        df["TOTAL DE INFRAESTRUCTURA AFECTADA"] = df[columnas_infraestructura_afectada_presentes].sum(axis=1).astype(int)
+    else:
+        df["TOTAL DE INFRAESTRUCTURA AFECTADA"] = 0
 
     # Eliminar las columnas que sirvieron para las sumas
-    columnas_a_eliminar = columnas_personas_afectadas + columnas_infraestructura_afectada
+    columnas_a_eliminar = columnas_personas_afectadas_presentes + columnas_infraestructura_afectada_presentes
     df = df.drop(columns=columnas_a_eliminar)
 
     # Logs para verificar las columnas y el tamaño del dataset
-    # print(f"Dataset columns after adding totals: {df.columns.tolist()}")
-    # print(f"Dataset size after adding totals: {df.shape}")
+    print(f"Dataset columns after adding totals: {df.columns.tolist()}")
+    print(f"Dataset size after adding totals: {df.shape}")
 
     return df
 
